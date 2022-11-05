@@ -11,24 +11,25 @@ cur = con.cursor()
 
 
 class User(UserMixin):
-    def __init__(self, name, login, password, about):
+    def __init__(self, name, email, password, about):
         self.name = name
-        self.login = login
+        self.email = email
         self.about = about
-        self.created_date = '/'.join(str(datetime.date.today()).split('-')[::-1])
+        self.created_date = '.'.join(str(datetime.date.today()).split('-')[::-1])
         self.set_password(password)
         self.id = self.get_id()
 
     def get_id(self):
         query = f"""SELECT {ID} FROM {USERS}
-                    WHERE {NAME} = {self.name} AND {LOGIN} = {self.login}
-                    AND {ABOUT} = {ABOUT} AND {PASSWORD} = {self.hashed_password}"""
+                    WHERE {NAME} = {self.name} AND {EMAIL} = {self.email}"""
         user_id = cur.execute(query).fetchone()
-        return user_id[0] if len(user_id) == 1 else None
+        if len(user_id) == 1:
+            return user_id[0]
+        return None
 
     def add(self):
-        query = f"""INSERT INTO {USERS}({NAME}, {LOGIN}, {PASSWORD}, {ABOUT}, {CREATED_DATE}) 
-                    VALUES({self.name}, {self.login}, {self.hashed_password}, {self.about}, {self.created_date})"""
+        query = f"""INSERT INTO {USERS}({NAME}, {EMAIL}, {PASSWORD}, {ABOUT}, {CREATED_DATE}) 
+                    VALUES({self.name}, {self.email}, {self.hashed_password}, {self.about}, {self.created_date})"""
         cur.execute(query)
         con.commit()
         self.id = self.get_id()
@@ -38,7 +39,7 @@ class User(UserMixin):
         self.edit()
 
     def edit_login(self, login):
-        self.login = login
+        self.email = login
         self.edit()
 
     def edit_password(self, password):
@@ -50,7 +51,7 @@ class User(UserMixin):
         self.edit()
 
     def edit(self):
-        db_functions.edit_user(self.id, self.name, self.login, self.hashed_password, self.about)
+        db_functions.edit_user(self.id, self.name, self.email, self.hashed_password, self.about)
 
     def delete(self):
         db_functions.delete_user(self.id)
