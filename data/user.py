@@ -13,7 +13,7 @@ cur = con.cursor()
 class User(UserMixin):
     def __init__(self, name, email, password, about):
         self.name = name
-        self.email = email.replace(DOG, DOG_REPLACE)
+        self.email = email
         self.about = about
         self.created_date = '.'.join(str(datetime.date.today()).split('-')[::-1])
         self.set_password(password)
