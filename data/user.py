@@ -5,7 +5,7 @@ import sqlite3
 from .constants import *
 from . import db_functions
 
-con = sqlite3.connect(DB_NAME)
+con = sqlite3.connect(DB_NAME, check_same_thread=False)
 
 cur = con.cursor()
 
@@ -13,7 +13,7 @@ cur = con.cursor()
 class User(UserMixin):
     def __init__(self, name, email, password, about):
         self.name = name
-        self.email = email
+        self.email = email.replace(DOG, DOG_REPLACE)
         self.about = about
         self.created_date = '.'.join(str(datetime.date.today()).split('-')[::-1])
         self.set_password(password)
@@ -21,15 +21,16 @@ class User(UserMixin):
 
     def get_id(self):
         query = f"""SELECT {ID} FROM {USERS}
-                    WHERE {NAME} = {self.name} AND {EMAIL} = {self.email}"""
-        user_id = cur.execute(query).fetchone()
+                    WHERE {NAME} = '{self.name}' AND {EMAIL} = '{self.email}'"""
+        print(query)
+        user_id = cur.execute(query).fetchall()
         if len(user_id) == 1:
             return user_id[0]
         return None
 
     def add(self):
         query = f"""INSERT INTO {USERS}({NAME}, {EMAIL}, {PASSWORD}, {ABOUT}, {CREATED_DATE}) 
-                    VALUES({self.name}, {self.email}, {self.hashed_password}, {self.about}, {self.created_date})"""
+                    VALUES('{self.name}', '{self.email}', '{self.hashed_password}', '{self.about}', '{self.created_date}')"""
         cur.execute(query)
         con.commit()
         self.id = self.get_id()

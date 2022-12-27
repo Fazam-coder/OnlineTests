@@ -1,7 +1,7 @@
 import sqlite3
 from .constants import *
 
-con = sqlite3.connect(DB_NAME)
+con = sqlite3.connect(DB_NAME, check_same_thread=False)
 cur = con.cursor()
 
 
@@ -15,8 +15,8 @@ def select_user(id):
 
 def edit_user(id, name, login, password, about):
     query = f"""UPDATE {USERS} 
-                SET {NAME} = {name}, {EMAIL} = {login}, 
-                {PASSWORD} = {password}, {ABOUT} = {about}
+                SET {NAME} = '{name}', {EMAIL} = '{login}', 
+                {PASSWORD} = '{password}', {ABOUT} = '{about}'
                 WHERE {ID} = {id}"""
     cur.execute(query)
     con.commit()
