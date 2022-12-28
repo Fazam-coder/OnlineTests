@@ -16,17 +16,8 @@ class User(UserMixin):
         self.email = email
         self.about = about
         self.created_date = '.'.join(str(datetime.date.today()).split('-')[::-1])
+        self.id = db_functions.get_user_id(name, email)
         self.set_password(password)
-        self.id = self.get_id()
-
-    def get_id(self):
-        query = f"""SELECT {ID} FROM {USERS}
-                    WHERE {NAME} = '{self.name}' AND {EMAIL} = '{self.email}'"""
-        print(query)
-        user_id = cur.execute(query).fetchall()
-        if len(user_id) == 1:
-            return user_id[0]
-        return None
 
     def add(self):
         query = f"""INSERT INTO {USERS}({NAME}, {EMAIL}, {PASSWORD}, {ABOUT}, {CREATED_DATE}) 
@@ -60,5 +51,6 @@ class User(UserMixin):
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.hashed_password, password)
+
+def check_user_password(hashed_password, password):
+    return check_password_hash(hashed_password, password)
