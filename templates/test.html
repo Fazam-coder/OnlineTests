@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Создание теста</h1>
+{% if message %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+{% endif %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }}<br>
+    {{ form.title(class="form-control") }}<br>
+    {% for error in form.title.errors %}
+        <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% endfor %}
+    {% for question in questions %}
+        <p>
+            <p>{{ question.title }}</p>
+            {{ question.answer_a }}<br>
+            {{ question.answer_b }}<br>
+            {{ question.answer_c }}<br>
+            {{ question.answer_d }}<br>
+        </p>
+    {% endfor %}
+    <p>{{ form.add_question(class="btn btn-success", type="submit") }}</p>
+    <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>
+</form>
+
+{% endblock %}

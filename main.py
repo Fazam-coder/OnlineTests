@@ -69,10 +69,10 @@ def login():
     return render_template('login.html', title='Авторизация', form=form, current_user=current_user)
 
 
-@app.route('/add_test')
+@app.route('/add_test', methods=['GET', 'POST'])
 def add_test():
     form = TestForm()
-    return render_template('test.html')
+    return render_template('test.html', tilte='Создание теста', form=form, current_user=current_user)
 
 
 def main():
