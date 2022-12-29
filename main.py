@@ -8,6 +8,7 @@ from forms.login import LoginForm
 from forms.register import RegisterForm
 
 from data.user import User, check_user_password
+from forms.test import TestForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Fazam_secret_key'
@@ -30,7 +31,7 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('base.html', title='Онлайн тесты', current_user=current_user)
+    return render_template('index.html', title='Онлайн тесты', current_user=current_user)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -66,6 +67,12 @@ def login():
         return render_template('login.html', message='Неверный пароль',
                                title='Авторизация', form=form, current_user=current_user)
     return render_template('login.html', title='Авторизация', form=form, current_user=current_user)
+
+
+@app.route('/add_test')
+def add_test():
+    form = TestForm()
+    return render_template('test.html')
 
 
 def main():

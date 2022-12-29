@@ -9,7 +9,7 @@ def get_user_id(name, email):
     query = f"""SELECT {ID} FROM {USERS}
                 WHERE {NAME} = '{name}' AND {EMAIL} = '{email}'"""
     user_id = cur.execute(query).fetchall()
-    if len(user_id[0]) == 1:
+    if user_id:
         return user_id[0][0]
     return None
 
@@ -35,3 +35,12 @@ def delete_user(id):
     query = f'DELETE FROM {USERS} WHERE {ID} = {id}'
     cur.execute(query)
     con.commit()
+
+
+def get_test_id(title, user_id):
+    query = f"""SELECT {ID} FROM {TESTS} 
+                WHERE {TEST_TITLE} = '{title}' AND {USER_ID} = '{user_id}'"""
+    test_id = cur.execute(query).fetchall()
+    if test_id:
+        return test_id[0][0]
+    return None

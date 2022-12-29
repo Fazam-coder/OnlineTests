@@ -20,11 +20,13 @@ class User(UserMixin):
         self.set_password(password)
 
     def add(self):
+        if self.id:
+            return
         query = f"""INSERT INTO {USERS}({NAME}, {EMAIL}, {PASSWORD}, {ABOUT}, {CREATED_DATE}) 
                     VALUES('{self.name}', '{self.email}', '{self.hashed_password}', '{self.about}', '{self.created_date}')"""
         cur.execute(query)
         con.commit()
-        self.id = self.get_id()
+        self.id = db_functions.get_user_id(self.name, self.email)
 
     def edit_name(self, name):
         self.name = name

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+    <a class="btn btn-primary" href="/add_test">Создать тест</a>
+
+{% endif %}
+{% endblock %}
