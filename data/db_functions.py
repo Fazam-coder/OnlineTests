@@ -44,3 +44,14 @@ def get_test_id(title, user_id):
     if test_id:
         return test_id[0][0]
     return None
+
+
+def get_question_id(title, a, b, c, d, correct, test_id):
+    query = f"""SELECT {ID} FROM {QUESTIONS}
+                WHERE {QUESTION_TITLE} = '{title}' AND {ANSWER_A} = '{a}' AND
+                      {ANSWER_B} = '{b}' AND {ANSWER_C} = '{c}' AND {ANSWER_D} = '{d}' AND
+                      {CORRECT_ANSWER} = '{correct}' AND {TEST_ID} = '{test_id}'"""
+    question_id = cur.execute(query).fetchall()
+    if question_id:
+        return question_id[0][0]
+    return None
