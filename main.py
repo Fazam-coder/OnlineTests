@@ -4,6 +4,7 @@ from werkzeug.utils import redirect
 
 from data import db_functions
 from data.constants import *
+from data.test import Test
 from forms.login import LoginForm
 from forms.register import RegisterForm
 
@@ -72,7 +73,21 @@ def login():
 @app.route('/add_test', methods=['GET', 'POST'])
 def add_test():
     form = TestForm()
-    return render_template('test.html', tilte='Создание теста', form=form, current_user=current_user)
+    if form.validate_on_submit():
+        if not form.title.data:
+            return render_template('test.html', message='Тест не назван',
+                                   title='Создание теста', form=form, current_user=current_user)
+        test = Test(form.title.data, current_user.id)
+        if form.add_question.data:
+            if not test.id:
+                test.add()
+                # Создание вопроса
+                # Подумать, что будет если user изменит параметр теста между написанием вопросов
+            else:
+                pass
+        if form.submit.data:
+            pass
+    return render_template('test.html', title='Создание теста', form=form, current_user=current_user)
 
 
 def main():

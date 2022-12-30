@@ -23,7 +23,7 @@ class Test:
     def add(self):
         if self.id:
             return
-        query = f"""INSERT INTO{TESTS}({TEST_TITLE}, {USER_ID})
+        query = f"""INSERT INTO {TESTS}({TEST_TITLE}, {USER_ID})
                     VALUES ('{self.title}', '{self.user_id}')"""
         cur.execute(query)
         con.commit()
