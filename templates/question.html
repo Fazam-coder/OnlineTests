@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Создание вопроса</h1>
+{% if message %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+{% endif %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control") }}<br>
+        {% for error in form.title.errors %}
+            <p class="alert alert-danger" role="alert">{{ error }}</p>
+        {% endfor %}
+    </p>
+    <p>
+        Введите варианты ответов (хотя бы один)<br>
+        {{ form.answer_a.label }}
+        {{ form.answer_a(class="form-control") }}
+        {% for error in form.answer_a.errors %}
+            <p class="alert alert-danger" role="alert">{{ error }}</p>
+        {% endfor %}
+        {{ form.answer_b.label }}
+        {{ form.answer_b(class="form-control") }}
+        {{ form.answer_c.label }}
+        {{ form.answer_c(class="form-control") }}
+        {{ form.answer_d.label }}
+        {{ form.answer_d(class="form-control") }}
+    </p>
+    <p>
+        {{ form.correct_answer.label }}<br>
+        {% for answer in form.correct_answer %}
+            <tr>
+                <td>{{ answer }}</td>
+                <td>{{ answer.label }}</td>
+            </tr>
+        {% endfor %}
+        {% for error in form.correct_answer.errors %}
+            <p class="alert alert-danger" role="alert">{{ error }}</p>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>
+</form>
+{% endblock %}

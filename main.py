@@ -4,6 +4,7 @@ from werkzeug.utils import redirect
 
 from data import db_functions
 from data.constants import *
+from data.question import Question
 from data.test import Test
 from forms.login import LoginForm
 from forms.question import QuestionForm
@@ -99,6 +100,11 @@ def add_test_end(id):
     form = TestForm()
     test_info = db_functions.select_test(id)
     form.title.data = test_info[TEST_TITLE]
+    if form.validate_on_submit():
+        if form.add_question.data:
+            return redirect(f'/add_question/{id}')
+        if form.submit.data:
+            return redirect('/')
     return render_template('test.html', title='Создание теста', form=form, current_user=current_user,
                            preparation=False)
 
@@ -106,6 +112,25 @@ def add_test_end(id):
 @app.route('/add_question/<int:test_id>', methods=['GET', 'POST'])
 def add_question(test_id):
     form = QuestionForm()
+    if form.validate_on_submit():
+        if not form.title.data:
+            return render_template('questions.html', title='Создание вопроса', form=form,
+                                   current_user=current_user, message='Вопрос не введён')
+        if not form.answer_a.data:
+            return render_template('questions.html', title='Создание вопроса', form=form,
+                                   current_user=current_user, message='Варианты ответов не введены')
+        if ((form.correct_answer.data == 2 and not form.answer_b.data) or
+            (form.correct_answer.data == 3 and not form.answer_c.data) or
+            (form.correct_answer.data == 4 and not form.answer_d.data)):
+            return render_template('questions.html', title='Создание вопроса', form=form,
+                                   current_user=current_user, message='Верный вариант ответа не введён')
+        question = Question(form.title.data, form.answer_a.data, form.answer_b.data,
+                            form.answer_c.data, form.answer_d.data, form.correct_answer.data, test_id)
+        if question.id:
+            return render_template('questions.html', title='Создание вопроса', form=form,
+                                   current_user=current_user, message='Такой вопрос уже существует')
+        question.add()
+        return redirect(f'/add_test/{test_id}')
     return render_template('question.html', title='Создание вопроса', form=form, current_user=current_user)
 
 
