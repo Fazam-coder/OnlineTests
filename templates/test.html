@@ -6,26 +6,34 @@
 {% endif %}
 <form method="post">
     {{ form.hidden_tag() }}
-    {% if not test_title %}
-        {{ form.title.label }}<br>
-        {{ form.title(class="form-control") }}<br>
+    {% if preparation %}
+        {% if not test_title %}
+            <p>
+                {{ form.title.label }}<br>
+                {{ form.title(class="form-control") }}<br>
+                {% for error in form.title.errors %}
+                    <p class="alert alert-danger" role="alert">{{ error }}</p>
+                {% endfor %}
+            </p>
+        {% else %}
+            <h2>{{ test_title }}</h2>
+        {% endif %}
+        <p>{{ form.submit_title(class="btn btn-primary", type="submit") }}</p>
     {% else %}
-        <h2>{{ test_title }}</h2>
+        <h2>{{ form.title.data }}</h2>
+    <!--добавить кнопку редактировать название -->
+        {% for question in questions %}
+            <p>
+                <p>{{ question.title }}</p>
+                {{ question.answer_a }}<br>
+                {{ question.answer_b }}<br>
+                {{ question.answer_c }}<br>
+                {{ question.answer_d }}<br>
+            </p>
+        {% endfor %}
+        <p>{{ form.add_question(class="btn btn-success", type="submit") }}</p>
+        <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>
     {% endif %}
-    {% for error in form.title.errors %}
-        <p class="alert alert-danger" role="alert">{{ error }}</p>
-    {% endfor %}
-    {% for question in questions %}
-        <p>
-            <p>{{ question.title }}</p>
-            {{ question.answer_a }}<br>
-            {{ question.answer_b }}<br>
-            {{ question.answer_c }}<br>
-            {{ question.answer_d }}<br>
-        </p>
-    {% endfor %}
-    <p>{{ form.add_question(class="btn btn-success", type="submit") }}</p>
-    <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>
 </form>
 
 {% endblock %}

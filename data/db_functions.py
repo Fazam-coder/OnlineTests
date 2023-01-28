@@ -46,6 +46,13 @@ def get_test_id(title, user_id):
     return None
 
 
+def select_test(id):
+    query = f"""SELECT * FROM {TESTS} WHERE {ID} = {id}"""
+    result = cur.execute(query).fetchone()
+    test_info = {ID: result[0], TEST_TITLE: result[1], USER_ID: result[2]}
+    return test_info
+
+
 def get_question_id(title, a, b, c, d, correct, test_id):
     query = f"""SELECT {ID} FROM {QUESTIONS}
                 WHERE {QUESTION_TITLE} = '{title}' AND {ANSWER_A} = '{a}' AND

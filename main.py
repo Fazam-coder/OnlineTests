@@ -6,6 +6,7 @@ from data import db_functions
 from data.constants import *
 from data.test import Test
 from forms.login import LoginForm
+from forms.question import QuestionForm
 from forms.register import RegisterForm
 
 from data.user import User, check_user_password
@@ -70,24 +71,42 @@ def login():
     return render_template('login.html', title='Авторизация', form=form, current_user=current_user)
 
 
+# Создание теста без вопросов, вопросы добавлять, переходя на страницу редактирования теста
+# В HTML отличать создание от редактирования с помощью bool
+# Уменьшить кол-во кнопок и условий к ним
 @app.route('/add_test', methods=['GET', 'POST'])
-def add_test():
+def add_test_start():
     form = TestForm()
     if form.validate_on_submit():
         if not form.title.data:
             return render_template('test.html', message='Тест не назван',
-                                   title='Создание теста', form=form, current_user=current_user)
+                                   title='Создание теста', form=form, current_user=current_user,
+                                   preparation=True)
         test = Test(form.title.data, current_user.id)
-        if form.add_question.data:
-            if not test.id:
-                test.add()
-                # Создание вопроса
-                # Подумать, что будет если user изменит параметр теста между написанием вопросов
-            else:
-                pass
-        if form.submit.data:
-            pass
-    return render_template('test.html', title='Создание теста', form=form, current_user=current_user)
+        if not test.id:
+            test.add()
+            return redirect(f'/add_test/{test.id}')
+        else:
+            return render_template('test.html', message='Такой тест уже существует',
+                                   title='Создание теста', form=form, current_user=current_user,
+                                   preparation=True)
+    return render_template('test.html', title='Создание теста', form=form, current_user=current_user,
+                           preparation=True)
+
+
+@app.route('/add_test/<int:id>', methods=['GET', 'POST'])
+def add_test_end(id):
+    form = TestForm()
+    test_info = db_functions.select_test(id)
+    form.title.data = test_info[TEST_TITLE]
+    return render_template('test.html', title='Создание теста', form=form, current_user=current_user,
+                           preparation=False)
+
+
+@app.route('/add_question/<int:test_id>', methods=['GET', 'POST'])
+def add_question(test_id):
+    form = QuestionForm()
+    return render_template('question.html', title='Создание вопроса', form=form, current_user=current_user)
 
 
 def main():

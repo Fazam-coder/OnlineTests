@@ -3,7 +3,7 @@ from data import db_functions
 
 import sqlite3
 
-con = sqlite3.connect(DB_NAME)
+con = sqlite3.connect(DB_NAME, check_same_thread=False)
 cur = con.cursor()
 
 
