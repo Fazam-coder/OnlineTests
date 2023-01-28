@@ -22,14 +22,25 @@
     {% else %}
         <h2>{{ form.title.data }}</h2>
     <!--добавить кнопку редактировать название -->
-        {% for question in questions %}
-            <p>
-                <p>{{ question.title }}</p>
-                {{ question.answer_a }}<br>
-                {{ question.answer_b }}<br>
-                {{ question.answer_c }}<br>
-                {{ question.answer_d }}<br>
-            </p>
+        {% for i in range(1, questions|length + 1) %}
+            <div class="col-md6 border rounded">
+                {% set question = questions[i-1] %}
+                {{i}}. {{ question.title }}<br>
+                а) {{ question.answer_a }}<br>
+                б) {{ question.answer_b }}<br>
+                в) {{ question.answer_c }}<br>
+                г) {{ question.answer_d }}<br>
+                Верный вариант:
+                {% if question.correct_answer == 1 %}
+                    а)
+                {% elif question.correct_answer == 2 %}
+                    б)
+                {% elif question.correct_answer == 3 %}
+                    в)
+                {% else %}
+                    г)
+                {% endif %}
+            </div>
         {% endfor %}
         <p>{{ form.add_question(class="btn btn-success", type="submit") }}</p>
         <p>{{ form.submit(class="btn btn-primary", type="submit") }}</p>

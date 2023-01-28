@@ -62,3 +62,14 @@ def get_question_id(title, a, b, c, d, correct, test_id):
     if question_id:
         return question_id[0][0]
     return None
+
+
+def select_questions_in_test(test_id):
+    query = f"""SELECT * FROM {QUESTIONS} WHERE {TEST_ID} = {test_id}"""
+    questions = cur.execute(query).fetchall()
+    result = []
+    for question in questions:
+        result.append({ID: question[0], QUESTION_TITLE: question[1], ANSWER_A: question[2],
+                       ANSWER_B: question[3], ANSWER_C: question[4], ANSWER_D: question[5],
+                       CORRECT_ANSWER: question[6], TEST_ID: question[7]})
+    return result

@@ -100,13 +100,19 @@ def add_test_end(id):
     form = TestForm()
     test_info = db_functions.select_test(id)
     form.title.data = test_info[TEST_TITLE]
+    questions = db_functions.select_questions_in_test(id)
+    for i in range(len(questions)):
+        quest = questions[i]
+        questions[i] = Question(quest[QUESTION_TITLE], quest[ANSWER_A], quest[ANSWER_B],
+                                quest[ANSWER_C], quest[ANSWER_D], quest[CORRECT_ANSWER],
+                                quest[TEST_ID])
     if form.validate_on_submit():
         if form.add_question.data:
             return redirect(f'/add_question/{id}')
         if form.submit.data:
             return redirect('/')
     return render_template('test.html', title='Создание теста', form=form, current_user=current_user,
-                           preparation=False)
+                           preparation=False, questions=questions)
 
 
 @app.route('/add_question/<int:test_id>', methods=['GET', 'POST'])
