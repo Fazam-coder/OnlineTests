@@ -11,14 +11,8 @@ class Test:
     def __init__(self, title, user_id):
         self.title = title
         self.user_id = user_id
-        self.questions = []
         self.id = self.get_id()
-
-    def add_question(self, question):
-        self.questions.append(question)
-
-    def set_questions(self, questions):
-        self.questions = questions
+        self.user_name = self.get_user_name()
 
     def add(self):
         if self.id:
@@ -31,3 +25,6 @@ class Test:
 
     def get_id(self):
         return db_functions.get_test_id(self.title, self.user_id)
+
+    def get_user_name(self):
+        return db_functions.select_user(self.user_id)[NAME]

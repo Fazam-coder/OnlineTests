@@ -34,7 +34,12 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Онлайн тесты', current_user=current_user)
+    tests = db_functions.select_all_tests()
+    for i in range(len(tests)):
+        test = tests[i]
+        tests[i] = Test(test[TEST_TITLE], test[USER_ID])
+    return render_template('index.html', title='Онлайн тесты',
+                           current_user=current_user, tests=tests)
 
 
 @app.route('/register', methods=['GET', 'POST'])

@@ -73,3 +73,12 @@ def select_questions_in_test(test_id):
                        ANSWER_B: question[3], ANSWER_C: question[4], ANSWER_D: question[5],
                        CORRECT_ANSWER: question[6], TEST_ID: question[7]})
     return result
+
+
+def select_all_tests():
+    query = f"""SELECT * FROM {TESTS}"""
+    tests = cur.execute(query).fetchall()
+    result = []
+    for test in tests:
+        result.append({ID: test[0], TEST_TITLE: test[1], USER_ID: test[2]})
+    return result
