@@ -32,12 +32,23 @@ def logout():
     return redirect("/")
 
 
+def get_questions_in_test(test_id):
+    questions = db_functions.select_questions_in_test(test_id)
+    for i in range(len(questions)):
+        quest = questions[i]
+        questions[i] = Question(quest[QUESTION_TITLE], quest[ANSWER_A], quest[ANSWER_B],
+                                quest[ANSWER_C], quest[ANSWER_D], quest[CORRECT_ANSWER],
+                                quest[TEST_ID])
+    return questions
+
+
 @app.route('/')
 def index():
     tests = db_functions.select_all_tests()
     for i in range(len(tests)):
         test = tests[i]
         tests[i] = Test(test[TEST_TITLE], test[USER_ID])
+    tests = tests[::-1]
     return render_template('index.html', title='Онлайн тесты',
                            current_user=current_user, tests=tests)
 
@@ -77,9 +88,6 @@ def login():
     return render_template('login.html', title='Авторизация', form=form, current_user=current_user)
 
 
-# Создание теста без вопросов, вопросы добавлять, переходя на страницу редактирования теста
-# В HTML отличать создание от редактирования с помощью bool
-# Уменьшить кол-во кнопок и условий к ним
 @app.route('/add_test', methods=['GET', 'POST'])
 def add_test_start():
     form = TestForm()
@@ -105,12 +113,7 @@ def add_test_end(id):
     form = TestForm()
     test_info = db_functions.select_test(id)
     form.title.data = test_info[TEST_TITLE]
-    questions = db_functions.select_questions_in_test(id)
-    for i in range(len(questions)):
-        quest = questions[i]
-        questions[i] = Question(quest[QUESTION_TITLE], quest[ANSWER_A], quest[ANSWER_B],
-                                quest[ANSWER_C], quest[ANSWER_D], quest[CORRECT_ANSWER],
-                                quest[TEST_ID])
+    questions = get_questions_in_test(id)
     if form.validate_on_submit():
         if form.add_question.data:
             return redirect(f'/add_question/{id}')
@@ -143,6 +146,20 @@ def add_question(test_id):
         question.add()
         return redirect(f'/add_test/{test_id}')
     return render_template('question.html', title='Создание вопроса', form=form, current_user=current_user)
+
+
+@app.route('/pass_test/<int:test_id>', methods=['GET', 'POST'])
+def pass_test(test_id):
+    test_info = db_functions.select_test(test_id)
+    test = Test(test_info[TEST_TITLE], test_info[USER_ID])
+    questions = get_questions_in_test(test_id)
+    return render_template('pass_test.html', title='Прохождение теста', test=test,
+                           questions=questions, current_user=current_user)
+
+
+@app.route('/answer/<int:question_id>')
+def answer(question_id):
+    return 'True'
 
 
 def main():

@@ -11,6 +11,11 @@
             id: {{ test.id }}
             Автор: {{ test.user_name }}
         </div>
+        {% if current_user.is_authenticated %}
+            <a class="btn btn-success" href="/pass_test/{{ test.id }}">
+                Пройти тест
+            </a>
+        {% endif %}
     </div>
 {% endfor %}
 {% endblock %}
