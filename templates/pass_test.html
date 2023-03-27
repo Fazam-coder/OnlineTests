@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>{{ test.title }}</h1>
-{% for i in range(questions|length) %}
-    {% set question = questions[i] %}
-    <div class="col-md6 border rounded">
-        <h2>{{ i+1 }}. {{ question.title }}</h2>
-        <p>
-            а) {{ question.answer_a }}
-            б) {{ question.answer_b }}
-            в) {{ question.answer_c }}
-            г) {{ question.answer_d }}
-        </p>
-        <a class="btn btn-success" href="/answer/{{ question.id }}">Ответить</a>
-    </div>
-{% endfor %}
-<a class="btn btn-primary" href="/">Завершить</a>
+<form action="" method="post">
+    {% for i in range(questions|length) %}
+        {% set question = questions[i] %}
+        <div class="col-md6 border rounded">
+            <h2>{{ i+1 }}. {{ question.title }}</h2>
+            <input type="radio" name="{{ i }}" value="1">{{ question.answer_a }}<br>
+            <input type="radio" name="{{ i }}" value="2">{{ question.answer_b }}<br>
+            <input type="radio" name="{{ i }}" value="3">{{ question.answer_c }}<br>
+            <input type="radio" name="{{ i }}" value="4">{{ question.answer_d }}
+        </div><br>
+    {% endfor %}
+    <p>
+        <input type="submit">
+    </p>
+</form>
 {% endblock %}

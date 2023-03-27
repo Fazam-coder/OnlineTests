@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_login import current_user, LoginManager, login_user, login_required, logout_user
 from werkzeug.utils import redirect
 
@@ -153,13 +153,18 @@ def pass_test(test_id):
     test_info = db_functions.select_test(test_id)
     test = Test(test_info[TEST_TITLE], test_info[USER_ID])
     questions = get_questions_in_test(test_id)
-    return render_template('pass_test.html', title='Прохождение теста', test=test,
-                           questions=questions, current_user=current_user)
-
-
-@app.route('/answer/<int:question_id>')
-def answer(question_id):
-    return 'True'
+    if request.method == 'POST':
+        answers = []
+        for i in range(len(questions)):
+            answer = request.form.get(str(i))
+            if answer:
+                answers.append(int(answer))
+            else:
+                answers.append(None)
+        return render_template('test_result.html', title='Результаты теста', test=test,
+                               questions=questions, answers=answers, current_user=current_user)
+    return render_template('pass_test.html', title='Прохождение теста',
+                           test=test, current_user=current_user, questions=questions)
 
 
 def main():
