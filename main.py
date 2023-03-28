@@ -155,14 +155,18 @@ def pass_test(test_id):
     questions = get_questions_in_test(test_id)
     if request.form.get('submit'):
         answers = []
+        count_correct_answers = 0
         for i in range(len(questions)):
             answer = request.form.get(str(i))
             if answer:
                 answers.append(int(answer))
+                if int(answer) == questions[i].correct_answer:
+                    count_correct_answers += 1
             else:
                 answers.append(None)
         return render_template('test_result.html', title='Результаты теста', test=test,
-                               questions=questions, answers=answers, current_user=current_user)
+                               questions=questions, answers=answers, current_user=current_user,
+                               count_correct_answers=count_correct_answers)
     return render_template('pass_test.html', title='Прохождение теста',
                            test=test, current_user=current_user, questions=questions)
 

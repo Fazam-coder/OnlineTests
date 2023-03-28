@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Результаты теста "{{ test.title }}"</h1>
+<h2>Ваш результат: {{ count_correct_answers }} из {{ questions|length }}</h2>
 {% for i in range(questions|length) %}
     {% set question = questions[i] %}
     {% set answer = answers[i] %}
