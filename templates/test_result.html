@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Результаты теста "{{ test.title }}"</h1>
+{% for i in range(questions|length) %}
+    {% set question = questions[i] %}
+    {% set answer = answers[i] %}
+    {% if question.correct_answer == answer %}
+        <div class="alert alert-success">
+            <h2 class="text-dark">{{ i+1 }}.{{ question.title }}</h2>
+            {% set question_answers = [question.answer_a, question.answer_b, question.answer_c, question.answer_d] %}
+            {% for j in range(question_answers|length) %}
+                {% if j+1 == question.correct_answer %}
+                    <p class="text-success">{{ question_answers[j] }}</p>
+                {% else %}
+                    <p class="text-dark">{{ question_answers[j] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-danger">
+            <h2 class="text-dark">{{ i+1 }}.{{ question.title }}</h2>
+            {% set question_answers = [question.answer_a, question.answer_b, question.answer_c, question.answer_d] %}
+            {% for j in range(question_answers|length) %}
+                {% if j+1 == question.correct_answer %}
+                    <p class="text-success">{{ question_answers[j] }}</p>
+                {% elif j+1 == answer %}
+                    <p class="text-danger">{{ question_answers[j] }}</p>
+                {% else %}
+                    <p class="text-dark">{{ question_answers[j] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endfor %}
+<a class="btn btn-primary" href="/">На главную страницу</a>
+{% endblock %}

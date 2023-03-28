@@ -153,7 +153,7 @@ def pass_test(test_id):
     test_info = db_functions.select_test(test_id)
     test = Test(test_info[TEST_TITLE], test_info[USER_ID])
     questions = get_questions_in_test(test_id)
-    if request.method == 'POST':
+    if request.form.get('submit'):
         answers = []
         for i in range(len(questions)):
             answer = request.form.get(str(i))
