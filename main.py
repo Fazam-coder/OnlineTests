@@ -171,6 +171,12 @@ def pass_test(test_id):
                            test=test, current_user=current_user, questions=questions)
 
 
+@app.route('/delete_test/<int:test_id>')
+def delete_test(test_id):
+    db_functions.delete_test(test_id)
+    return redirect('/')
+
+
 def main():
     app.run()
 

@@ -82,3 +82,9 @@ def select_all_tests():
     for test in tests:
         result.append({ID: test[0], TEST_TITLE: test[1], USER_ID: test[2]})
     return result
+
+
+def delete_test(id):
+    query = f'DELETE FROM {TESTS} WHERE {ID} = {id}'
+    cur.execute(query)
+    con.commit()

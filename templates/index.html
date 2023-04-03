@@ -17,6 +17,9 @@
             <a class="btn btn-success" href="/pass_test/{{ test.id }}">
                 Пройти тест
             </a>
+            {% if current_user.id == test.user_id %}
+                <a class="btn btn-danger" href="/delete_test/{{ test.id }}">Удалить</a>
+            {% endif %}
         {% endif %}
     </div><br>
 {% endfor %}
